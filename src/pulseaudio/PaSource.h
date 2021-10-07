@@ -10,7 +10,7 @@ class PaSource {
 public:
     PaSource();
 
-    void read();
+    void read(buffer_frame *buffer);
 
     ~PaSource();
 private:

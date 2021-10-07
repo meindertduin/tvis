@@ -17,18 +17,11 @@ PaSource::~PaSource() {
     }
 }
 
-void PaSource::read() {
-
-    uint8_t buf[1024];
+void PaSource::read(buffer_frame *buffer) {
+    size_t buf_size = sizeof(buffer);
     int error;
-    size_t buf_size = sizeof(buf);
 
-   if (pa_simple_read(m_pa_simple, buf,buf_size, &error) < 0) {
+   if (pa_simple_read(m_pa_simple, buffer, buf_size, &error) < 0) {
         printf("error while reading bytes: %s \n", pa_strerror(error));
     }
-
-    auto file = fopen("test.txt", "wb");
-
-    fwrite(buf, 1, sizeof(buf), file);
-    fclose(file);
 }
