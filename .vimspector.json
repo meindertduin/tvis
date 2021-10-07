@@ -1,0 +1,17 @@
+{
+    "configurations": {
+        "run": {
+            "adapter": "vscode-cpptools",
+            "configuration": {
+                "request": "launch",
+                "program": "${workspaceRoot}/Debug/tvis",
+                "args": [],
+                "cwd": "${workspaceRoot}",
+                "environment": [],
+                "externalConsole": true,
+                "stopAtEntry": true,
+                "MIMode": "gdb"
+            }
+        }
+    }
+}
