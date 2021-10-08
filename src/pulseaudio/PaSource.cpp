@@ -17,11 +17,10 @@ PaSource::~PaSource() {
     }
 }
 
-void PaSource::read(buffer_frame *buffer) {
-    size_t buf_size = sizeof(buffer);
+void PaSource::read(buffer_frame *buffer, const size_t buffer_bytes) {
     int error;
 
-   if (pa_simple_read(m_pa_simple, buffer, buf_size, &error) < 0) {
+   if (pa_simple_read(m_pa_simple, buffer, buffer_bytes, &error) < 0) {
         printf("error while reading bytes: %s \n", pa_strerror(error));
     }
 }

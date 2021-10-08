@@ -4,13 +4,14 @@
 
 struct buffer_frame {
     int16_t l;
+    int16_t r;
 };
 
 class PaSource {
 public:
     PaSource();
 
-    void read(buffer_frame *buffer);
+    void read(buffer_frame *buffer, const size_t buffer_bytes);
 
     ~PaSource();
 private:

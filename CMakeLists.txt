@@ -15,4 +15,4 @@ include_directories(src)
 set(PROJECT_TEST_NAME ${PROJECT_NAME}_test)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADER})
-target_link_libraries(${PROJECT_NAME} pulse-simple pulse)
+target_link_libraries(${PROJECT_NAME} pulse-simple pulse fftw3)
