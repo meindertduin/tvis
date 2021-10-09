@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build Debug
+cmake -S . -B debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build debug
 
