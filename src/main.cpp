@@ -28,9 +28,14 @@ int main() {
             fftw_plan plan = fftw_plan_dft_r2c_1d(frames_count, left, output, FFTW_ESTIMATE);
             fftw_execute(plan);
 
-            for (auto x : *output) {
-                printf("%f\n", **output);
+
+            for (auto j = 0u; j < frames_count; j++) {
+                auto k = output[j][1];
+                auto y = static_cast<int64_t>(k);
+                printf("%ld\n", y);
             }
+
+            printf("\n");
         }
     }
 }
