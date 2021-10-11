@@ -9,5 +9,6 @@ public:
 private:
     static void disable_raw_mode();
     static void enter_raw_mode();
+    void clear_screen();
 };
 
