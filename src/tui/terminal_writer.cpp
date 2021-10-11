@@ -37,16 +37,16 @@ void TerminalWriter::clear_screen() {
     write(STDOUT_FILENO, "\x1b[2J", 4);
     write(STDOUT_FILENO, "\x1b[H", 3);
     //write(STDOUT_FILENO, "\x1b[7m", 4);
-    write(STDOUT_FILENO, "\x1b[31m", 5);
-    printf("xxxx\n");
-    printf("xxxx\n");
-    write(STDOUT_FILENO, "\x1b[93m", 5);
-    printf("xxxx\n");
-    printf("xxxxxxxx\n");
-    write(STDOUT_FILENO, "\x1b[94m", 5);
-    printf("xxxxxxxx\n");
-    printf("xxxxxxxx\n");
-    write(STDOUT_FILENO, "\x1b[0m", 4);
+    //write(STDOUT_FILENO, "\x1b[31m", 5);
+    //printf("xxxx\n");
+    //printf("xxxx\n");
+    //write(STDOUT_FILENO, "\x1b[93m", 5);
+    //printf("xxxx\n");
+    //printf("xxxxxxxx\n");
+    //write(STDOUT_FILENO, "\x1b[94m", 5);
+    //printf("xxxxxxxx\n");
+    //printf("xxxxxxxx\n");
+    //write(STDOUT_FILENO, "\x1b[0m", 4);
 }
 
 TerminalWriter::~TerminalWriter() {

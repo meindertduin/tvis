@@ -6,10 +6,10 @@
 #include "screen.h"
 
 Screen::Screen() {
-    m_bars_component = new BarsComponent{{0, 0, 0, 0}};
     if (!set_window_size()) {
         // TODO handle error
     }
+    m_bars_component = new BarsComponent{{m_screen_data.width, m_screen_data.height, 0, 0}};
 }
 
 Screen::~Screen() {
@@ -17,8 +17,8 @@ Screen::~Screen() {
 }
 
 void Screen::render() {
-    //m_bars_component->render();
-    //m_terminal_writer.write_to_console();
+    m_terminal_writer.write_to_console();
+    m_bars_component->render();
 }
 
 bool Screen::set_window_size() {

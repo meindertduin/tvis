@@ -1,10 +1,15 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
+
 
 #include "tui/screen.h"
 
 int main() {
     Screen screen;
 
-    screen.render();
+    while (true) {
+        screen.render();
+    }
 }
 
