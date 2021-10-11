@@ -12,6 +12,10 @@ int main() {
 
     screen.render();
 
+    while(true) {
+
+    }
+
     //
     //for (;;) {
     //    for (auto i = 0u; i < 10; i++) {

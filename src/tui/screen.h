@@ -8,4 +8,5 @@ public:
     void render();
 private:
     TerminalWriter m_terminal_writer;
+    void enter_raw_mode();
 };

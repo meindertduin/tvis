@@ -2,6 +2,12 @@
 
 #include "terminal_writer.h"
 
+struct termios sm_original_state;
+
+TerminalWriter::TerminalWriter() {
+    enter_raw_mode();
+}
+
 void TerminalWriter::write(){
     printf("\n");
     printf("\x1B[31mTexting\033[0m\t\t");
@@ -27,4 +33,22 @@ void TerminalWriter::write(){
     printf("\033[1;47;35mTexting\033[0m\t\t");
     printf("\t\t");
     printf("\n");
+}
+
+void TerminalWriter::enter_raw_mode() {
+    tcgetattr(STDIN_FILENO, &sm_original_state);
+    atexit(disable_raw_mode);
+
+    auto raw = sm_original_state;
+    raw.c_lflag &= ~(ECHO | ICANON);
+
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
+
+void TerminalWriter::disable_raw_mode() {
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &sm_original_state);
+}
+
+TerminalWriter::~TerminalWriter() {
+    disable_raw_mode();
 }
