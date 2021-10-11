@@ -1,5 +1,6 @@
 #include "screen.h"
 
 void Screen::render() {
-    m_terminal_writer.write();
+    m_terminal_writer.write_to_console();
 }
+

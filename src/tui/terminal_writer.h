@@ -1,12 +1,10 @@
 #pragma once
 #include <termios.h>
-#include <unistd.h>
-#include <stdlib.h>
 
 class TerminalWriter {
 public:
     TerminalWriter();
-    void write();
+    void write_to_console();
     ~TerminalWriter();
 private:
     static void disable_raw_mode();
