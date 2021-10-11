@@ -4,7 +4,7 @@
             "adapter": "vscode-cpptools",
             "configuration": {
                 "request": "launch",
-                "program": "${workspaceRoot}/Debug/tvis",
+                "program": "${workspaceRoot}/debug/tvis",
                 "args": [],
                 "cwd": "${workspaceRoot}",
                 "environment": [],
