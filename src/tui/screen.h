@@ -3,7 +3,7 @@
 #include "terminal_writer.h"
 #include "bars_component.h"
 
-struct WindowData {
+struct ScreenData {
     int width, height;
 };
 
@@ -15,7 +15,7 @@ public:
 private:
     TerminalWriter m_terminal_writer;
     BarsComponent* m_bars_component;
-    WindowData m_window_data;
+    ScreenData m_screen_data;
 
     bool set_window_size();
 };

@@ -27,8 +27,8 @@ bool Screen::set_window_size() {
         return false;
     };
 
-    m_window_data.width = ws.ws_col;
-    m_window_data.height = ws.ws_row;
+    m_screen_data.width = ws.ws_col;
+    m_screen_data.height = ws.ws_row;
 
     return true;
 }
