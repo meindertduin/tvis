@@ -13,7 +13,7 @@ BarsComponent::~BarsComponent() {
 }
 
 void BarsComponent::render() {
-    auto bars_amount = m_component_data.width / 4;
+    auto bars_amount = 10;
 
     BarSpectrumDataTransformer transformer{bars_amount};
     buffer_frame buffer[Constants::k_sample_size];
@@ -27,8 +27,6 @@ void BarsComponent::render() {
             output_buffer[i][j] = ' ';
         }
     }
-
-    auto x = output_buffer[1];
 
     int i = 0;
     for (auto &bar : bars) {
