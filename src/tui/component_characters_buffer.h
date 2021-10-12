@@ -1,10 +1,11 @@
 #pragma once
 
+#include <iostream>
 #include <string>
-#include <vector>
+
+#include "../common/point.h"
 
 using std::string;
-using std::vector;
 
 enum AnsiColor {
     FGBlack = 30,
@@ -49,21 +50,15 @@ struct Character {
 
 class ComponentCharactersBuffer {
 public:
-    ComponentCharactersBuffer(int cols, int rows) : m_cols(cols), m_rows(rows) {
-        for (int i = 0; i < rows; i++) {
-            Character* row_ptr = (Character*) malloc((cols) * sizeof(Character));
-            for (int j = 0; j < cols; j++) {
-                row_ptr[j] = { ' ', AnsiColor::FGWhite };
-            }
-        }
-    };
+    ComponentCharactersBuffer(int cols, int rows);
+    ~ComponentCharactersBuffer();
 
-    ~ComponentCharactersBuffer() {
-        for (auto character_row : m_character_rows) {
-            free(character_row);
-        }
-    }
+    void set_character(Point point, Character character);
+
+    void set_row(int row, Character* characters, const unsigned int len);
+
+    string get_string();
 private:
     int m_cols, m_rows;
-    vector<Character*> m_character_rows;
+    Character** m_characters;
 };
