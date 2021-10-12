@@ -22,9 +22,9 @@ void BarsComponent::render() {
     auto bars = transformer.transform(buffer, sizeof(buffer));
     auto max = 8000;
 
-    char output_buffer[10][bars_amount + 1];
+    char output_buffer[10][bars_amount + 2];
     for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < bars_amount + 1; j++) {
+        for (int j = 0; j < bars_amount + 2; j++) {
             output_buffer[i][j] = ' ';
         }
     }
@@ -45,12 +45,11 @@ void BarsComponent::render() {
     }
 
     for (int i = 0; i < 10; i++) {
-        output_buffer[i][bars_amount] = '\n';
+        output_buffer[i][bars_amount -1] = '\n';
+        output_buffer[i][bars_amount] = '\0';
     }
 
-    for(int i = 0; i < 10; i++) {
-        for (int j = 0; j < bars_amount + 1; j++) {
-            printf("%c", output_buffer[i][j]);
-        }
+    for (int i = 0; i < 10; i++) {
+        printf("%s", output_buffer[i]);
     }
 }
