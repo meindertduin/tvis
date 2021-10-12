@@ -20,8 +20,7 @@ void TerminalWriter::enter_raw_mode() {
     atexit(disable_raw_mode);
 
     auto raw = sm_original_state;
-    raw.c_iflag &= ~(ICRNL | IXON | ISTRIP);
-    raw.c_lflag &= ~(ECHO | ICANON | IEXTEN);
+    raw.c_lflag &= ~(ECHO);
     raw.c_cflag |= (CS8);
     raw.c_cc[VMIN] = 0;
     raw.c_cc[VTIME] = 1;

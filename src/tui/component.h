@@ -16,7 +16,7 @@ public:
         m_component_character_buffer = new ComponentCharactersBuffer(component_data.width, component_data.height);
     }
 
-    virtual ComponentCharactersBuffer* get_component_buffer() = 0;
+    virtual ComponentCharactersBuffer* create_component_text_buffer() = 0;
 
     ~Component() {
         delete m_component_character_buffer;
