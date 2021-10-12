@@ -17,7 +17,6 @@ Screen::~Screen() {
 }
 
 void Screen::render() {
-    m_terminal_writer.write_to_console();
     m_bars_component.render();
 }
 

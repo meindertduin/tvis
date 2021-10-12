@@ -13,10 +13,11 @@ BarsComponent::~BarsComponent() {
 }
 
 void BarsComponent::render() {
-    auto bars_amount = 10;
+    auto bars_amount = 40;
 
     BarSpectrumDataTransformer transformer{bars_amount};
     buffer_frame buffer[Constants::k_sample_size];
+    m_source.read(buffer, sizeof(buffer));
 
     auto bars = transformer.transform(buffer, sizeof(buffer));
     auto max = 8000;

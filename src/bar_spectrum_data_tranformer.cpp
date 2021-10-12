@@ -42,11 +42,9 @@ std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer
         mag = std::pow(mag, 0.5);
 
         bars.push_back(static_cast<uint32_t>(mag));
-        printf("%d : ", static_cast<uint32_t>(mag));
     }
 
     fftw_free(output);
-    printf("\n");
     return bars;
 }
 
