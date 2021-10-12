@@ -12,7 +12,7 @@ class BarsComponent : public Component {
 public:
     BarsComponent();
     BarsComponent(ComponentData component_data);
-    ComponentCharactersBuffer* get_component_buffer();
+    ComponentCharactersBuffer* create_component_text_buffer();
     ~BarsComponent();
 private:
     PaSource m_source;

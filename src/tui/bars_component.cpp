@@ -10,7 +10,7 @@ BarsComponent::BarsComponent(ComponentData component_data) : Component(component
 
 BarsComponent::~BarsComponent() {}
 
-ComponentCharactersBuffer* BarsComponent::get_component_buffer() {
+ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto bars_amount = 30;
     auto col_height = 20;
     auto bars_width = 3;

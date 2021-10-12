@@ -17,7 +17,7 @@ Screen::~Screen() {
 }
 
 void Screen::render() {
-    auto component_buffer = m_bars_component.get_component_buffer();
+    auto component_buffer = m_bars_component.create_component_text_buffer();
     m_terminal_writer.clear_screen();
     m_terminal_writer.write_to_console(component_buffer->get_string());
 }
