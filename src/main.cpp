@@ -5,11 +5,18 @@
 
 #include "tui/screen.h"
 
-int main() {
-    Screen screen;
+#include "bar_spectrum_data_tranformer.h"
+#include "constants.h"
 
-    while (true) {
-        screen.render();
+int main() {
+    //Screen screen;
+
+    BarsComponent bars;
+    for (;;) {
+        BarSpectrumDataTransformer transformer{10};
+        buffer_frame buffer[Constants::k_sample_size];
+
+        transformer.transform(buffer, sizeof(buffer));
     }
 }
 

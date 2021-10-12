@@ -15,5 +15,5 @@ public:
     void render();
     ~BarsComponent();
 private:
-    PaSource *m_source;
+    PaSource m_source;
 };

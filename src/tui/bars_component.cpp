@@ -4,16 +4,12 @@
 #include "../constants.h"
 #include "../bar_spectrum_data_tranformer.h"
 
-BarsComponent::BarsComponent() : Component() {
-    m_source = new PaSource();
-}
+BarsComponent::BarsComponent() : Component() {}
 
-BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {
-    m_source = new PaSource();
-}
+BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {}
+
 
 BarsComponent::~BarsComponent() {
-    delete m_source;
 }
 
 void BarsComponent::render() {
