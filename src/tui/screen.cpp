@@ -18,8 +18,8 @@ Screen::~Screen() {
 
 void Screen::render() {
     auto component_buffer = m_bars_component.get_component_buffer();
-    m_terminal_writer.write_to_console();
-    printf("%s", component_buffer->get_string().c_str());
+    m_terminal_writer.clear_screen();
+    m_terminal_writer.write_to_console(component_buffer->get_string());
 }
 
 bool Screen::set_window_size() {
