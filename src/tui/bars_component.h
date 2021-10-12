@@ -10,6 +10,7 @@ using std::vector;
 
 class BarsComponent : public Component {
 public:
+    BarsComponent();
     BarsComponent(ComponentData component_data);
     void render();
     ~BarsComponent();

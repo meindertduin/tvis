@@ -9,16 +9,16 @@ Screen::Screen() {
     if (!set_window_size()) {
         // TODO handle error
     }
-    m_bars_component = new BarsComponent{{m_screen_data.width, m_screen_data.height, 0, 0}};
+    m_bars_component.set_component_data({ m_screen_data.width, m_screen_data.height, 0, 0});
 }
 
 Screen::~Screen() {
-    delete m_bars_component;
+
 }
 
 void Screen::render() {
     m_terminal_writer.write_to_console();
-    m_bars_component->render();
+    m_bars_component.render();
 }
 
 bool Screen::set_window_size() {

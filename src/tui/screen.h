@@ -14,7 +14,7 @@ public:
     void render();
 private:
     TerminalWriter m_terminal_writer;
-    BarsComponent* m_bars_component;
+    BarsComponent m_bars_component;
     ScreenData m_screen_data;
 
     bool set_window_size();
