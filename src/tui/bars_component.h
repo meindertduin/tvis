@@ -12,8 +12,10 @@ class BarsComponent : public Component {
 public:
     BarsComponent();
     BarsComponent(ComponentData component_data);
-    void render();
+    ComponentCharactersBuffer* get_component_buffer();
     ~BarsComponent();
 private:
     PaSource m_source;
+
+    AnsiColor get_bar_section_color(int height);
 };

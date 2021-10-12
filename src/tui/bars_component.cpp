@@ -8,12 +8,11 @@ BarsComponent::BarsComponent() : Component() {}
 
 BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {}
 
+BarsComponent::~BarsComponent() {}
 
-BarsComponent::~BarsComponent() {
-}
-
-void BarsComponent::render() {
+ComponentCharactersBuffer* BarsComponent::get_component_buffer() {
     auto bars_amount = 40;
+    auto bars_height = 20;
 
     BarSpectrumDataTransformer transformer{bars_amount};
     buffer_frame buffer[Constants::k_sample_size];
@@ -22,9 +21,9 @@ void BarsComponent::render() {
     auto bars = transformer.transform(buffer, sizeof(buffer));
     auto max = 8000;
 
-    char output_buffer[10][bars_amount + 2];
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < bars_amount + 2; j++) {
+    char output_buffer[bars_height][bars_amount];
+    for (int i = 0; i < bars_height; i++) {
+        for (int j = 0; j < bars_amount; j++) {
             output_buffer[i][j] = ' ';
         }
     }
@@ -36,20 +35,31 @@ void BarsComponent::render() {
         }
 
         auto bar_height = std::floor((static_cast<double>(bar) / static_cast<double>(max))
-                * 10.0);
-        int inverted_height = 10 - bar_height;
-        for (auto j = 10; j > inverted_height; j--) {
+                * static_cast<double>(bars_height));
+        int inverted_height = bars_height - bar_height;
+        for (auto j = bars_height; j > inverted_height; j--) {
             output_buffer[j][i] = 'x';
         }
         i++;
     }
 
-    for (int i = 0; i < 10; i++) {
-        output_buffer[i][bars_amount -1] = '\n';
-        output_buffer[i][bars_amount] = '\0';
+    for (auto i = 0u; i < bars_height; i++) {
+        Character characters_row[bars_amount];
+
+        auto row_color = get_bar_section_color(bars_height - i);
+        for (auto j = 0u; j < bars_amount; j++) {
+            characters_row[j] = { output_buffer[i][j], row_color };
+        }
+
+        m_component_character_buffer->set_row(i, characters_row, bars_amount);
     }
 
-    for (int i = 0; i < 10; i++) {
-        printf("%s", output_buffer[i]);
-    }
+    return m_component_character_buffer;
+}
+
+AnsiColor BarsComponent::get_bar_section_color(int height) {
+    if (height < 3) return AnsiColor::FGBlue;
+    if (height < 6) return AnsiColor::FGYellow;
+
+    return AnsiColor::FGRed;
 }

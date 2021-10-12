@@ -37,7 +37,7 @@ void ComponentCharactersBuffer::set_row(int row, Character *characters, const un
     }
 
     auto row_ptr = m_characters[row];
-    for (auto i = 0u; i < m_cols; i++) {
+   for (auto i = 0u; i < m_cols; i++) {
         if (i >= len) {
             row_ptr[i] = { ' ', AnsiColor::FGWhite };
         } else {
@@ -51,7 +51,7 @@ string ComponentCharactersBuffer::get_string() {
 
     Character* previous_character = nullptr;
 
-    value += "\x1b[" + std::to_string(m_characters[0][0].color) + "m";
+    value += "\x1b[" + std::to_string(31) + "m";
 
     for (auto i = 0u; i < m_rows; i++) {
         auto row_ptr = m_characters[i];
@@ -66,11 +66,15 @@ string ComponentCharactersBuffer::get_string() {
                 value += "\x1b[" + std::to_string(character.color) + "m";
             }
 
+            value += character.character;
+
             previous_character = &character;
         }
 
         value += "\n";
     }
+
+    value += "\x1b[0m";
 
     return value;
 }

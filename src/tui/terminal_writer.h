@@ -7,7 +7,6 @@ using std::string;
 class TerminalWriter {
 public:
     TerminalWriter();
-    void write_to_buffer();
     void write_to_console();
     ~TerminalWriter();
 private:
