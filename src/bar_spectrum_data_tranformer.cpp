@@ -127,17 +127,19 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
     }
 
     for (auto i = 0u; i < bars_len; i++) {
-        if (m_fading_bars[i] < (*bars)[i]) {
+        int fade_value = m_fading_bars[i];
+        if (fade_value < (*bars)[i]) {
             m_fading_bars[i] = (*bars)[i];
             continue;
         } else {
-            m_fading_bars[i] -= (2000 / Constants::k_fps);
-            if (m_fading_bars[i] < 0) {
-                m_fading_bars[i] = 0;
+            fade_value -= (2000 / Constants::k_fps);
+            if (fade_value < 1) {
+                fade_value = 0;
             }
-        }
 
-        (*bars)[i] = m_fading_bars[i];
+            (*bars)[i] = fade_value;
+            m_fading_bars[i] = fade_value;
+        }
     }
 }
 
