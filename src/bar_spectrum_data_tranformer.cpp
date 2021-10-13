@@ -48,6 +48,8 @@ std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer
 
     apply_smoothing(&bars);
 
+    apply_fading_smoothing(&bars);
+
     return bars;
 }
 
@@ -96,17 +98,46 @@ void BarSpectrumDataTransformer::apply_smoothing(std::vector<uint32_t>* bars) {
         if ((*bars)[outer_index] < 100)
         {
             (*bars)[outer_index] = 100;
-        } else {
-            for (int64_t j = 0; j < bars_len; j++) {
-                const auto index = static_cast<size_t>(j);
-                const auto weighted_value = (*bars)[outer_index] / m_smoothing_weights[static_cast<size_t>(std::abs(i - j))];
+            continue;
+        }
 
-                if ((*bars)[index] < weighted_value)
-                {
-                    (*bars)[index] = weighted_value;
-                }
+        for (int64_t j = 0; j < bars_len; j++) {
+            if (i == j) {
+                continue;
+            }
+
+            const auto index = static_cast<size_t>(j);
+            const auto weighted_value = (*bars)[outer_index] / m_smoothing_weights[static_cast<size_t>(std::abs(i - j))];
+
+            if ((*bars)[index] < weighted_value)
+            {
+                (*bars)[index] = weighted_value;
             }
         }
+    }
+}
+
+void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* bars) {
+    auto bars_len = static_cast<uint32_t>(bars->size());
+
+    if (bars_len != m_fading_bars.size()) {
+        for (int i = 0u; i < bars_len; i++) {
+            m_fading_bars.push_back(0);
+        }
+    }
+
+    for (auto i = 0u; i < bars_len; i++) {
+        if (m_fading_bars[i] < (*bars)[i]) {
+            m_fading_bars[i] = (*bars)[i];
+            continue;
+        } else {
+            m_fading_bars[i] -= (2000 / Constants::k_fps);
+            if (m_fading_bars[i] < 0) {
+                m_fading_bars[i] = 0;
+            }
+        }
+
+        (*bars)[i] = m_fading_bars[i];
     }
 }
 

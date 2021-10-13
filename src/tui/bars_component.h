@@ -3,6 +3,7 @@
 #include "../source/pa_source.h"
 
 #include "component.h"
+#include "../bar_spectrum_data_tranformer.h"
 
 #pragma once
 
@@ -17,5 +18,6 @@ public:
 private:
     PaSource m_source;
 
+    BarSpectrumDataTransformer m_transformer;
     AnsiColor get_bar_section_color(int height);
 };

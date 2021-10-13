@@ -9,6 +9,7 @@ Screen::Screen() {
     if (!set_window_size()) {
         // TODO handle error
     }
+
     m_bars_component.set_component_data({ 90, 20, 0, 0});
 }
 

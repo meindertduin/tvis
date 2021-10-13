@@ -2,11 +2,10 @@
 
 #include "bars_component.h"
 #include "../constants.h"
-#include "../bar_spectrum_data_tranformer.h"
 
-BarsComponent::BarsComponent() : Component() {}
+BarsComponent::BarsComponent() : Component(), m_transformer{30} {}
 
-BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {}
+BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data), m_transformer{30} {}
 
 BarsComponent::~BarsComponent() {}
 
@@ -17,11 +16,10 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto total_width = bars_width * bars_amount;
     auto max = 8000;
 
-    BarSpectrumDataTransformer transformer{bars_amount};
     buffer_frame buffer[Constants::k_sample_size];
     m_source.read(buffer, sizeof(buffer));
 
-    auto bars = transformer.transform(buffer, sizeof(buffer));
+    auto bars = m_transformer.transform(buffer, sizeof(buffer));
 
     char output_buffer[col_height][total_width];
     Character characters[col_height][total_width];
