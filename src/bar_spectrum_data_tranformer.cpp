@@ -45,6 +45,9 @@ std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer
     }
 
     fftw_free(output);
+
+    apply_smoothing(&bars);
+
     return bars;
 }
 
@@ -71,6 +74,38 @@ void BarSpectrumDataTransformer::calculate_cutoff_frequencies() {
                 (*m_low_cutoff_frequencies)[i] = (*m_low_cutoff_frequencies)[i - 1] + 1;
             }
             (*m_high_cutoff_frequencies)[i - 1] = (*m_low_cutoff_frequencies)[i - 1];
+        }
+    }
+}
+
+void BarSpectrumDataTransformer::apply_smoothing(std::vector<uint32_t>* bars) {
+    auto bars_len = static_cast<uint32_t>(bars->size());
+
+    if (bars_len != m_smoothing_weights.size()) {
+        m_smoothing_weights.reserve(bars->size());
+
+        for (auto i = 0u; i < bars->size(); ++i)
+        {
+            m_smoothing_weights[i] = std::pow(Constants::k_smoothing_factor, i);
+        }
+    }
+
+    for (auto i = 1l; i < bars_len; i++) {
+        auto outer_index = static_cast<size_t>(i);
+
+        if ((*bars)[outer_index] < 100)
+        {
+            (*bars)[outer_index] = 100;
+        } else {
+            for (int64_t j = 0; j < bars_len; j++) {
+                const auto index = static_cast<size_t>(j);
+                const auto weighted_value = (*bars)[outer_index] / m_smoothing_weights[static_cast<size_t>(std::abs(i - j))];
+
+                if ((*bars)[index] < weighted_value)
+                {
+                    (*bars)[index] = weighted_value;
+                }
+            }
         }
     }
 }
