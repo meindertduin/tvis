@@ -8,6 +8,7 @@
 using std::string;
 
 enum AnsiColor {
+    None = 0,
     FGBlack = 30,
     FGRed = 31,
     FGGreen = 32,

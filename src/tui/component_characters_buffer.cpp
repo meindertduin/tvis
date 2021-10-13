@@ -62,7 +62,9 @@ string ComponentCharactersBuffer::get_string() {
             if (previous_color != character.color) {
                 // reset the coloring
                 value += "\x1b[0m";
-                value += "\x1b[" + std::to_string(character.color) + "m";
+                if (character.color != AnsiColor::None) {
+                    value += "\x1b[" + std::to_string(character.color) + "m";
+                }
             }
 
             value += character.character;
@@ -74,6 +76,9 @@ string ComponentCharactersBuffer::get_string() {
     }
 
     value += "\x1b[0m";
+
+    // add another new-line to avoid background color flickering
+    value += '\n';
 
     return value;
 }

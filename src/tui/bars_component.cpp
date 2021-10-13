@@ -24,9 +24,10 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto bars = transformer.transform(buffer, sizeof(buffer));
 
     char output_buffer[col_height][total_width];
+    Character characters[col_height][total_width];
     for (int i = 0; i < col_height; i++) {
         for (int j = 0; j < total_width; j++) {
-            output_buffer[i][j] = ' ';
+            characters[i][j] = { ' ', AnsiColor::None };
         }
     }
 
@@ -42,7 +43,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
         for (auto j = col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < bars_width; k++) {
-                output_buffer[j][i + k] = 'x';
+                characters[j][i + k] = { ' ', AnsiColor::BGRed };
             }
         }
 
@@ -50,14 +51,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     }
 
     for (auto i = 0u; i < col_height; i++) {
-        Character characters_row[total_width];
-
-        auto row_color = get_bar_section_color(col_height - i);
-        for (auto j = 0u; j < total_width; j++) {
-            characters_row[j] = { output_buffer[i][j], AnsiColor::FGRed };
-        }
-
-        m_component_character_buffer->set_row(i, characters_row, total_width);
+        m_component_character_buffer->set_row(i, characters[i], total_width);
     }
 
     return m_component_character_buffer;
