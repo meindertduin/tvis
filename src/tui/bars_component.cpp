@@ -1,7 +1,6 @@
 #include <math.h>
 
 #include "bars_component.h"
-#include "../constants.h"
 
 BarsComponent::BarsComponent() : Component(), m_transformer{30} {}
 

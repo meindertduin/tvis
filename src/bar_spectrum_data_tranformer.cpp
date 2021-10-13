@@ -9,7 +9,6 @@
 #include "bar_spectrum_data_tranformer.h"
 #include <math.h>
 #include <fftw3.h>
-#include "constants.h"
 
 BarSpectrumDataTransformer::BarSpectrumDataTransformer(int bars_amount)
     : m_bars_amount(bars_amount) {
@@ -132,7 +131,9 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
             m_fading_bars[i] = (*bars)[i];
             continue;
         } else {
-            fade_value -= (4000 / Constants::k_fps);
+            if (m_counter == 0) {
+                fade_value -= 1000;
+            }
             if (fade_value < 1) {
                 fade_value = 0;
             }
@@ -140,6 +141,11 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
             (*bars)[i] = fade_value;
             m_fading_bars[i] = fade_value;
         }
+    }
+
+    // decrement the counter
+    if (m_counter-- == 0) {
+        m_counter = k_decrease_bars_counter;
     }
 }
 
