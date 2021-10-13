@@ -14,7 +14,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto col_height = 20;
     auto bars_width = 3;
     auto total_width = bars_width * bars_amount;
-    auto max = 8000;
+    auto max = 16000;
 
     buffer_frame buffer[Constants::k_sample_size];
     m_source.read(buffer, sizeof(buffer));
@@ -35,7 +35,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
             bar = max;
         }
 
-        auto bar_height = std::floor((static_cast<double>(bar) / static_cast<double>(max))
+        auto bar_height = std::round((static_cast<double>(bar) / static_cast<double>(max))
                 * static_cast<double>(col_height));
         int inverted_height = col_height - bar_height;
 

@@ -38,7 +38,7 @@ std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer
                    (output[cutoff_freq][1] * output[cutoff_freq][1]));
         }
         auto mag = freq_magnitude / ((*m_high_cutoff_frequencies)[k] - (*m_low_cutoff_frequencies)[k] + 1);
-        mag *= (std::log2(2 + k) * (100.0 / m_bars_amount));
+        mag *= (std::log2(2 + k * 1.5) * (100.0 / m_bars_amount));
         mag = std::pow(mag, 0.5);
 
         bars.push_back(static_cast<uint32_t>(mag));
@@ -132,7 +132,7 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
             m_fading_bars[i] = (*bars)[i];
             continue;
         } else {
-            fade_value -= (2000 / Constants::k_fps);
+            fade_value -= (4000 / Constants::k_fps);
             if (fade_value < 1) {
                 fade_value = 0;
             }
