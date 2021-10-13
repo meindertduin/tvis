@@ -54,7 +54,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
         auto row_color = get_bar_section_color(col_height - i);
         for (auto j = 0u; j < total_width; j++) {
-            characters_row[j] = { output_buffer[i][j], row_color };
+            characters_row[j] = { output_buffer[i][j], AnsiColor::FGRed };
         }
 
         m_component_character_buffer->set_row(i, characters_row, total_width);
