@@ -2,11 +2,6 @@
 
 #include "bars_component.h"
 
-BarsComponent::BarsComponent() : Component() {
-    set_spectrum_settings();
-    m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
-}
-
 BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {
     set_spectrum_settings();
     m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
@@ -19,7 +14,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto bars_amount = 45;
     auto col_height = 20;
     auto bars_width = 2;
-    auto total_width = bars_width * bars_amount;
+    auto total_width = Constants::k_bars_width * bars_amount;
     auto max = 16000;
 
     buffer_frame buffer[Constants::k_sample_size];

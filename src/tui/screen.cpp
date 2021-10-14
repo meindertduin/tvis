@@ -10,15 +10,13 @@ Screen::Screen() {
         // TODO handle error
     }
 
-    m_bars_component.set_component_data({ 90, 20, 0, 0});
+    m_bars_component = std::unique_ptr<BarsComponent>(new BarsComponent({90, 20, 0, 0}));
 }
 
-Screen::~Screen() {
-
-}
+Screen::~Screen() {}
 
 void Screen::render() {
-    auto component_buffer = m_bars_component.create_component_text_buffer();
+    auto component_buffer = m_bars_component->create_component_text_buffer();
     m_terminal_writer.clear_screen();
     m_terminal_writer.write_to_console(component_buffer->get_string());
 }
