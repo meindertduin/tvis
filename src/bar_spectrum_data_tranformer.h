@@ -14,8 +14,7 @@ public:
 private:
     int m_bars_amount;
 
-    const unsigned int k_decrease_bars_counter = Constants::k_fps / 8;
-    unsigned int m_counter = k_decrease_bars_counter;
+    unsigned int m_counter = Constants::k_decrease_bars_counter;
 
     std::vector<uint32_t> m_fading_bars;
     std::vector<double> m_smoothing_weights;

@@ -1,11 +1,12 @@
 #include <stdint.h>
 
 namespace Constants {
-static const uint32_t k_fps = 20;
+static const uint32_t k_fps = 30;
 static const uint32_t k_sampling_frequency = 44100;
 static const double k_high_cutoff = 22050;
 static const double k_low_cutoff = 30;
 static const uint32_t k_sample_size = k_sampling_frequency / k_fps;
 static const uint32_t k_fftw_results = (k_sampling_frequency / 2) + 1;
-static const double k_smoothing_factor = 1.3;
+static const double k_smoothing_factor = 1.2;
+static const unsigned int k_decrease_bars_counter = k_fps / 5;
 };

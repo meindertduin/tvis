@@ -145,7 +145,7 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
 
     // decrement the counter
     if (m_counter-- == 0) {
-        m_counter = k_decrease_bars_counter;
+        m_counter = Constants::k_decrease_bars_counter;
     }
 }
 
