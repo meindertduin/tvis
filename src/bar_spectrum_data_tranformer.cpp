@@ -134,7 +134,7 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
             continue;
         } else {
             if (m_counter == 0) {
-                fade_value -= 1000;
+                fade_value -= 500;
             }
             if (fade_value < 1) {
                 fade_value = 0;

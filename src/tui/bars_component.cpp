@@ -14,7 +14,7 @@ BarsComponent::~BarsComponent() {
 
 ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto total_width = Constants::k_bars_width * m_settings->bars_amount;
-    auto max = 8000;
+    auto max = 4000;
 
     buffer_frame buffer[Constants::k_sample_size];
     m_source.read(buffer, sizeof(buffer));
@@ -41,7 +41,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
-                characters[j][i + k] = { ' ', AnsiColor::BGRed };
+                characters[j][i + k] = { '*', AnsiColor::FGRed };
             }
         }
 
@@ -65,7 +65,7 @@ void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
         Constants::k_low_cutoff,
         Constants::k_high_cutoff,
         Constants::k_sample_size,
-        Constants::k_smoothing_factor + (std::log10(bars_amount) * 0.15),
+        Constants::k_smoothing_factor + ((std::log10(bars_amount) - 1) * 0.5),
         Constants::k_decrease_bars_counter
     });
 }
