@@ -73,10 +73,3 @@ void BarsComponent::set_spectrum_settings() {
         Constants::k_decrease_bars_counter
     });
 }
-
-AnsiColor BarsComponent::get_bar_section_color(int height) {
-    if (height < 6) return AnsiColor::FGBlue;
-    if (height < 12) return AnsiColor::FGYellow;
-
-    return AnsiColor::FGRed;
-}

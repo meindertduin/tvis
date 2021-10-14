@@ -25,6 +25,4 @@ private:
     void set_spectrum_settings();
     std::shared_ptr<SpectrumSettings> m_settings;
     std::unique_ptr<BarSpectrumDataTransformer> m_transformer;
-
-    AnsiColor get_bar_section_color(int height);
 };
