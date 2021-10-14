@@ -3,28 +3,27 @@
 #include "bars_component.h"
 
 BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {
-    set_spectrum_settings();
+    set_spectrum_settings(&component_data);
     m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
+    m_col_height = component_data.height;
+    m_bars_width = 2;
 }
 
 BarsComponent::~BarsComponent() {
 }
 
 ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
-    auto bars_amount = 45;
-    auto col_height = 20;
-    auto bars_width = 2;
-    auto total_width = Constants::k_bars_width * bars_amount;
-    auto max = 16000;
+    auto total_width = Constants::k_bars_width * m_settings->bars_amount;
+    auto max = 8000;
 
     buffer_frame buffer[Constants::k_sample_size];
     m_source.read(buffer, sizeof(buffer));
 
     auto bars = m_transformer.get()->transform(buffer, sizeof(buffer));
 
-    char output_buffer[col_height][total_width];
-    Character characters[col_height][total_width];
-    for (int i = 0; i < col_height; i++) {
+    char output_buffer[m_col_height][total_width];
+    Character characters[m_col_height][total_width];
+    for (int i = 0; i < m_col_height; i++) {
         for (int j = 0; j < total_width; j++) {
             characters[i][j] = { ' ', AnsiColor::None };
         }
@@ -37,19 +36,19 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         }
 
         auto bar_height = std::round((static_cast<double>(bar) / static_cast<double>(max))
-                * static_cast<double>(col_height));
-        int inverted_height = col_height - bar_height;
+                * static_cast<double>(m_col_height));
+        int inverted_height = m_col_height - bar_height;
 
-        for (auto j = col_height; j > inverted_height; j--) {
-            for (auto k = 0u; k < bars_width; k++) {
+        for (auto j = m_col_height; j > inverted_height; j--) {
+            for (auto k = 0u; k < m_bars_width; k++) {
                 characters[j][i + k] = { ' ', AnsiColor::BGRed };
             }
         }
 
-        i += bars_width;
+        i += m_bars_width;
     }
 
-    for (auto i = 0u; i < col_height; i++) {
+    for (auto i = 0u; i < m_col_height; i++) {
         m_component_character_buffer->set_row(i, characters[i], total_width);
     }
 
@@ -57,9 +56,9 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 }
 
 
-void BarsComponent::set_spectrum_settings() {
+void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
     m_settings = std::shared_ptr<SpectrumSettings>(new SpectrumSettings {
-        45,
+        static_cast<uint32_t>(std::floor(component_data->width / Constants::k_bars_width)),
         Constants::k_sampling_frequency,
         Constants::k_low_cutoff,
         Constants::k_high_cutoff,

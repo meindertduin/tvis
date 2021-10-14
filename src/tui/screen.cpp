@@ -10,7 +10,7 @@ Screen::Screen() {
         // TODO handle error
     }
 
-    m_bars_component = std::unique_ptr<BarsComponent>(new BarsComponent({90, 20, 0, 0}));
+    m_bars_component = std::unique_ptr<BarsComponent>(new BarsComponent({m_screen_data.width, 20, 0, 0}));
 }
 
 Screen::~Screen() {}

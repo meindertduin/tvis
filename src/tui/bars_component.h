@@ -15,14 +15,16 @@ using std::vector;
 
 class BarsComponent : public Component {
 public:
-    BarsComponent();
     BarsComponent(ComponentData component_data);
     ComponentCharactersBuffer* create_component_text_buffer();
     ~BarsComponent();
 private:
     PaSource m_source;
 
-    void set_spectrum_settings();
+    unsigned int m_col_height;
+    unsigned int m_bars_width;
+
+    void set_spectrum_settings(const ComponentData* component_data);
     std::shared_ptr<SpectrumSettings> m_settings;
     std::unique_ptr<BarSpectrumDataTransformer> m_transformer;
 };
