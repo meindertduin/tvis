@@ -2,9 +2,9 @@
 #include <stdexcept>
 
 ComponentCharactersBuffer::ComponentCharactersBuffer(int cols, int rows) : m_cols(cols), m_rows(rows) {
-    m_characters = (Character**) malloc(rows * sizeof(Character));
+    m_characters = (Character**) new Character[rows];
     for (int i = 0; i < rows; i++) {
-        m_characters[i] = (Character*) malloc((cols) * sizeof(Character));
+        m_characters[i] = new Character[cols];
         for (int j = 0; j < cols; j++) {
             m_characters[i][j] = { ' ', AnsiColor::FGWhite };
         }
@@ -13,10 +13,10 @@ ComponentCharactersBuffer::ComponentCharactersBuffer(int cols, int rows) : m_col
 
 ComponentCharactersBuffer::~ComponentCharactersBuffer() {
     for (int i = 0u; i < m_rows; i++) {
-        free(m_characters[i]);
+        delete m_characters[i];
     }
 
-    free(m_characters);
+    delete m_characters;
 }
 
 void ComponentCharactersBuffer::set_character(Point point, Character character) {
