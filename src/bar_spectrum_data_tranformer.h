@@ -1,20 +1,22 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "source/pa_source.h"
-#include "constants.h"
+#include "settings.h"
 
 class BarSpectrumDataTransformer {
 public:
-    BarSpectrumDataTransformer(int bars_amount);
+    BarSpectrumDataTransformer(std::shared_ptr<SpectrumSettings> settings);
     std::vector<uint32_t> transform(buffer_frame* buffer, size_t buffers_size);
 
     ~BarSpectrumDataTransformer();
 private:
-    int m_bars_amount;
-
-    unsigned int m_counter = Constants::k_decrease_bars_counter;
+    uint32_t m_bars_amount;
+    std::shared_ptr<SpectrumSettings> m_settings;
+    unsigned int m_counter;
+    uint32_t m_fftw_results;
 
     std::vector<uint32_t> m_fading_bars;
     std::vector<double> m_smoothing_weights;

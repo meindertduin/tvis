@@ -2,11 +2,18 @@
 
 #include "bars_component.h"
 
-BarsComponent::BarsComponent() : Component(), m_transformer{30} {}
+BarsComponent::BarsComponent() : Component() {
+    set_spectrum_settings();
+    m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
+}
 
-BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data), m_transformer{30} {}
+BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {
+    set_spectrum_settings();
+    m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
+}
 
-BarsComponent::~BarsComponent() {}
+BarsComponent::~BarsComponent() {
+}
 
 ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto bars_amount = 45;
@@ -18,7 +25,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     buffer_frame buffer[Constants::k_sample_size];
     m_source.read(buffer, sizeof(buffer));
 
-    auto bars = m_transformer.transform(buffer, sizeof(buffer));
+    auto bars = m_transformer.get()->transform(buffer, sizeof(buffer));
 
     char output_buffer[col_height][total_width];
     Character characters[col_height][total_width];
@@ -52,6 +59,19 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     }
 
     return m_component_character_buffer;
+}
+
+
+void BarsComponent::set_spectrum_settings() {
+    m_settings = std::shared_ptr<SpectrumSettings>(new SpectrumSettings {
+        45,
+        Constants::k_sampling_frequency,
+        Constants::k_low_cutoff,
+        Constants::k_high_cutoff,
+        Constants::k_sample_size,
+        Constants::k_smoothing_factor,
+        Constants::k_decrease_bars_counter
+    });
 }
 
 AnsiColor BarsComponent::get_bar_section_color(int height) {

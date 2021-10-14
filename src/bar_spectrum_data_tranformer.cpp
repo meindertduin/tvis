@@ -10,28 +10,30 @@
 #include <math.h>
 #include <fftw3.h>
 
-BarSpectrumDataTransformer::BarSpectrumDataTransformer(int bars_amount)
-    : m_bars_amount(bars_amount) {
+BarSpectrumDataTransformer::BarSpectrumDataTransformer(std::shared_ptr<SpectrumSettings> settings) : m_settings(settings) {
+    m_bars_amount = settings->bars_amount;
+    m_counter = settings->decreate_bars_counter;
+    m_fftw_results = (settings->sampling_frequency / 2) + 1;
     calculate_cutoff_frequencies();
 }
 
 std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer, size_t buffers_size) {
     std::vector<uint> bars;
 
-    double left[Constants::k_sample_size];
-    for (int j = 0; j < Constants::k_sample_size; j++) {
+    double left[m_settings->sample_size];
+    for (int j = 0; j < m_settings->sample_size; j++) {
         left[j] = buffer[j].l;
     }
 
-    fftw_complex* output = static_cast<fftw_complex *>(fftw_malloc(sizeof(fftw_complex) * Constants::k_fftw_results));
+    fftw_complex* output = static_cast<fftw_complex *>(fftw_malloc(sizeof(fftw_complex) * m_fftw_results));
 
-    fftw_plan plan = fftw_plan_dft_r2c_1d(Constants::k_sample_size, left, output, FFTW_ESTIMATE);
+    fftw_plan plan = fftw_plan_dft_r2c_1d(m_settings->sample_size, left, output, FFTW_ESTIMATE);
     fftw_execute(plan);
 
     for (auto k = 0u; k < m_bars_amount; k++) {
         double freq_magnitude = 0.0;
         for (auto cutoff_freq = (*m_low_cutoff_frequencies)[k]; cutoff_freq <= (*m_high_cutoff_frequencies)[k]
-                && cutoff_freq < Constants::k_fftw_results; cutoff_freq++)
+                && cutoff_freq < m_fftw_results; cutoff_freq++)
         {
            freq_magnitude += std::sqrt((output[cutoff_freq][0] * output[cutoff_freq][0]) +
                    (output[cutoff_freq][1] * output[cutoff_freq][1]));
@@ -57,16 +59,16 @@ void BarSpectrumDataTransformer::calculate_cutoff_frequencies() {
     m_low_cutoff_frequencies = new std::vector<uint32_t>(m_bars_amount + 1);
     m_high_cutoff_frequencies = new std::vector<uint32_t>(m_bars_amount + 1);
 
-    auto freq_const =std::log10(static_cast<double>(m_bars_amount) / static_cast<double>(Constants::k_high_cutoff)) /
+    auto freq_const =std::log10(static_cast<double>(m_bars_amount) / static_cast<double>(m_settings->high_cutoff_frequency)) /
         ((1.0 / (static_cast<double>(m_bars_amount) + 1.0)) - 1.0);
 
     for (auto i = 0u; i <= m_bars_amount; ++i) {
-        freq_const_per_bin[i] = static_cast<double>(Constants::k_high_cutoff) *
+        freq_const_per_bin[i] = static_cast<double>(m_settings->high_cutoff_frequency) *
             std::pow(10.0, (freq_const * -1) + (((i + 1.0) / (static_cast<double>(m_bars_amount) + 1.0)) * freq_const));
 
-        auto frequency = freq_const_per_bin[i] / (static_cast<double>(Constants::k_sampling_frequency) / 2.0);
+        auto frequency = freq_const_per_bin[i] / (static_cast<double>(m_settings->sampling_frequency) / 2.0);
         (*m_low_cutoff_frequencies)[i] = static_cast<uint32_t>(std::floor(frequency *
-                    (static_cast<double>(Constants::k_sample_size) / 4.0)));
+                    (static_cast<double>(m_settings->sample_size) / 4.0)));
 
         if (i > 0)
         {
@@ -87,7 +89,7 @@ void BarSpectrumDataTransformer::apply_smoothing(std::vector<uint32_t>* bars) {
 
         for (auto i = 0u; i < bars->size(); ++i)
         {
-            m_smoothing_weights[i] = std::pow(Constants::k_smoothing_factor, i);
+            m_smoothing_weights[i] = std::pow(m_settings->smoothing_factor, i);
         }
     }
 
@@ -145,7 +147,7 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
 
     // decrement the counter
     if (m_counter-- == 0) {
-        m_counter = Constants::k_decrease_bars_counter;
+        m_counter = m_settings->decreate_bars_counter;
     }
 }
 

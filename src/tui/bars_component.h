@@ -1,11 +1,15 @@
 #include <stdint.h>
 #include <vector>
-#include "../source/pa_source.h"
-
-#include "component.h"
-#include "../bar_spectrum_data_tranformer.h"
+#include <memory>
 
 #pragma once
+
+#include "../source/pa_source.h"
+#include "component.h"
+#include "../bar_spectrum_data_tranformer.h"
+#include "../settings.h"
+#include "../constants.h"
+
 
 using std::vector;
 
@@ -18,6 +22,9 @@ public:
 private:
     PaSource m_source;
 
-    BarSpectrumDataTransformer m_transformer;
+    void set_spectrum_settings();
+    std::shared_ptr<SpectrumSettings> m_settings;
+    std::unique_ptr<BarSpectrumDataTransformer> m_transformer;
+
     AnsiColor get_bar_section_color(int height);
 };
