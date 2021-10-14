@@ -57,13 +57,15 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
 
 void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
+
+    auto bars_amount = std::floor(component_data->width / Constants::k_bars_width);
     m_settings = std::shared_ptr<SpectrumSettings>(new SpectrumSettings {
-        static_cast<uint32_t>(std::floor(component_data->width / Constants::k_bars_width)),
+        static_cast<uint32_t>(bars_amount),
         Constants::k_sampling_frequency,
         Constants::k_low_cutoff,
         Constants::k_high_cutoff,
         Constants::k_sample_size,
-        Constants::k_smoothing_factor,
+        Constants::k_smoothing_factor + (std::log10(bars_amount) * 0.15),
         Constants::k_decrease_bars_counter
     });
 }
