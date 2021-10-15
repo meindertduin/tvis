@@ -57,7 +57,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         m_component_character_buffer->set_row(i, characters[i], total_width);
     }
 
-    return m_component_character_buffer;
+    return m_component_character_buffer.get();
 }
 
 
