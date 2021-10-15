@@ -7,6 +7,11 @@ BarsComponent::BarsComponent(ComponentData component_data) : Component(component
     m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
     m_col_height = component_data.height;
     m_bars_width = 2;
+
+    m_on_resize = [this](const ComponentData *new_component_data) {
+        set_spectrum_settings(new_component_data);
+        m_transformer.reset(new BarSpectrumDataTransformer(m_settings));
+    };
 }
 
 BarsComponent::~BarsComponent() {
@@ -57,7 +62,6 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
 
 void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
-
     auto bars_amount = std::floor(component_data->width / Constants::k_bars_width);
     m_settings = std::shared_ptr<SpectrumSettings>(new SpectrumSettings {
         static_cast<uint32_t>(bars_amount),
