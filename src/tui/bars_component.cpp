@@ -19,7 +19,6 @@ BarsComponent::~BarsComponent() {
 
 ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto total_width = Constants::k_bars_width * m_settings->bars_amount;
-    auto max = 4000;
 
     buffer_frame buffer[Constants::k_sample_size];
     m_source.read(buffer, sizeof(buffer));
@@ -36,11 +35,11 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
     int i = 0;
     for (auto &bar : bars) {
-        if (bar > max) {
-            bar = max;
+        if (bar > m_settings->max_magnitude) {
+            bar = m_settings->max_magnitude;
         }
 
-        auto bar_height = std::round((static_cast<double>(bar) / static_cast<double>(max))
+        auto bar_height = std::round((static_cast<double>(bar) / static_cast<double>(m_settings->max_magnitude))
                 * static_cast<double>(m_col_height));
         int inverted_height = m_col_height - bar_height;
 
@@ -63,6 +62,10 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
 void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
     auto bars_amount = std::floor(component_data->width / Constants::k_bars_width);
+
+    // set the max lower when there are more bars, since the maginitude is higher per bar, when there are less bars
+    auto max = 20000 / std::pow(std::log10(bars_amount), 2);
+
     m_settings = std::shared_ptr<SpectrumSettings>(new SpectrumSettings {
         static_cast<uint32_t>(bars_amount),
         Constants::k_sampling_frequency,
@@ -70,6 +73,7 @@ void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
         Constants::k_high_cutoff,
         Constants::k_sample_size,
         Constants::k_smoothing_factor + ((std::log10(bars_amount) - 1) * 0.5),
-        Constants::k_decrease_bars_counter
+        Constants::k_decrease_bars_counter,
+        static_cast<uint32_t>(std::floor(max))
     });
 }

@@ -8,5 +8,6 @@ struct SpectrumSettings {
     uint32_t sample_size;
     double smoothing_factor;
     unsigned int decreate_bars_counter;
+    unsigned int max_magnitude;
 };
 
