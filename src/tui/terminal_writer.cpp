@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
+#include <csignal>
 
 #include "terminal_writer.h"
 
@@ -17,7 +18,14 @@ void TerminalWriter::write_to_console(string value){
 
 void TerminalWriter::enter_raw_mode() {
     tcgetattr(STDIN_FILENO, &sm_original_state);
-    atexit(disable_raw_mode);
+
+    signal(SIGINT, disable_raw_mode);
+    signal(SIGABRT, disable_raw_mode);
+    signal(SIGTERM, disable_raw_mode);
+    signal(SIGSEGV, disable_raw_mode);
+
+    // hide the cursor
+    printf("\x1b[?25l");
 
     auto raw = sm_original_state;
     raw.c_lflag &= ~(ECHO);
@@ -28,8 +36,12 @@ void TerminalWriter::enter_raw_mode() {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
-void TerminalWriter::disable_raw_mode() {
+void TerminalWriter::disable_raw_mode(int param) {
+    // re-enable the cursor
+    printf("\x1b[?25h");
+
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &sm_original_state);
+    exit(param);
 }
 
 void TerminalWriter::clear_screen() {
@@ -38,5 +50,4 @@ void TerminalWriter::clear_screen() {
 }
 
 TerminalWriter::~TerminalWriter() {
-    disable_raw_mode();
 }
