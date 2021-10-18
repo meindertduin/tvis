@@ -6,7 +6,7 @@ ComponentCharactersBuffer::ComponentCharactersBuffer(int cols, int rows) : m_col
     for (int i = 0; i < rows; i++) {
         m_characters[i] = new Character[cols];
         for (int j = 0; j < cols; j++) {
-            m_characters[i][j] = { u' ', AnsiColor::FGWhite };
+            m_characters[i][j] = { " ", AnsiColor::FGWhite };
         }
     }
 }
@@ -39,7 +39,7 @@ void ComponentCharactersBuffer::set_row(int row, Character *characters, const un
     auto row_ptr = m_characters[row];
     for (auto i = 0u; i < m_cols; i++) {
         if (i >= len) {
-            row_ptr[i] = { u' ', AnsiColor::FGWhite };
+            row_ptr[i] = { " ", AnsiColor::FGWhite };
         } else {
             row_ptr[i] = characters[i];
         }

@@ -44,8 +44,9 @@ enum AnsiColor {
     BGBrightWhite = 107,
 };
 
+
 struct Character {
-    char16_t character;
+    char character[4];
     AnsiColor color;
 };
 
