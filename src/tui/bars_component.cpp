@@ -72,7 +72,7 @@ void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
         Constants::k_low_cutoff,
         Constants::k_high_cutoff,
         Constants::k_sample_size,
-        Constants::k_smoothing_factor + ((std::log10(bars_amount) - 1) * 0.5),
+        Constants::k_smoothing_factor,
         Constants::k_decrease_bars_counter,
         static_cast<uint32_t>(std::floor(max))
     });
