@@ -45,7 +45,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
-                characters[j][i + k] = { "█", AnsiColor::FGRed };
+                characters[j][i + k] = { "▋", AnsiColor::FGBrightYellow };
             }
         }
 
