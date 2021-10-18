@@ -13,11 +13,18 @@
 
 using std::vector;
 
+enum BarCharacterPiece {
+    FullBlock,
+    HalfBlock,
+    QuarterBlock,
+    SteepLeft,
+    SteepRight,
+};
+
 class BarsComponent : public Component {
 public:
     BarsComponent(ComponentData component_data);
     ComponentCharactersBuffer* create_component_text_buffer();
-    std::vector<double> set_bar_cols_heights(std::vector<uint32_t>* bars);
     ~BarsComponent();
 private:
     PaSource m_source;
@@ -26,6 +33,8 @@ private:
     unsigned int m_bars_width;
 
     void set_spectrum_settings(const ComponentData* component_data);
+    char get_bar_char(BarCharacterPiece character_piece);
+
     std::shared_ptr<SpectrumSettings> m_settings;
     std::unique_ptr<BarSpectrumDataTransformer> m_transformer;
 };
