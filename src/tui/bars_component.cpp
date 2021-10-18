@@ -3,10 +3,11 @@
 #include "bars_component.h"
 
 BarsComponent::BarsComponent(ComponentData component_data) : Component(component_data) {
+    m_col_height = component_data.height;
     set_spectrum_settings(&component_data);
     m_transformer = std::unique_ptr<BarSpectrumDataTransformer>(new BarSpectrumDataTransformer(m_settings));
-    m_col_height = component_data.height;
     m_bars_width = 2;
+
 
     m_on_resize = [this](const ComponentData *new_component_data) {
         set_spectrum_settings(new_component_data);
@@ -35,15 +36,14 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
     int i = 0;
     for (auto &bar : bars) {
-        auto bar_height = (static_cast<double>(bar) / static_cast<double>(m_settings->max_magnitude) * static_cast<double>(m_col_height));
-        auto first_decimal = static_cast<int>(bar_height * 10.0) % 10;
+        auto first_decimal = static_cast<int>(bar * 10.0) % 10;
 
         int extra_height = 0;
         if (first_decimal > 2) {
             extra_height = 1;
         }
 
-        int inverted_height = m_col_height - std::floor(bar_height) - extra_height;
+        int inverted_height = m_col_height - std::floor(bar) - extra_height;
 
         // add characters from the bottom to the top of the bar
         for (auto j = m_col_height; j > inverted_height; j--) {
@@ -71,6 +71,7 @@ void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
 
     m_settings = std::shared_ptr<SpectrumSettings>(new SpectrumSettings {
         static_cast<uint32_t>(bars_amount),
+        m_col_height,
         Constants::k_sampling_frequency,
         Constants::k_low_cutoff,
         Constants::k_high_cutoff,

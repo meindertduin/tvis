@@ -17,6 +17,7 @@ class BarsComponent : public Component {
 public:
     BarsComponent(ComponentData component_data);
     ComponentCharactersBuffer* create_component_text_buffer();
+    std::vector<double> set_bar_cols_heights(std::vector<uint32_t>* bars);
     ~BarsComponent();
 private:
     PaSource m_source;

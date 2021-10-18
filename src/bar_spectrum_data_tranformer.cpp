@@ -17,7 +17,7 @@ BarSpectrumDataTransformer::BarSpectrumDataTransformer(std::shared_ptr<SpectrumS
     calculate_cutoff_frequencies();
 }
 
-std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer, size_t buffers_size) {
+std::vector<double> BarSpectrumDataTransformer::transform(buffer_frame* buffer, size_t buffers_size) {
     std::vector<uint> bars;
 
     double left[m_settings->sample_size];
@@ -55,7 +55,7 @@ std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer
 
     apply_fading_smoothing(&bars);
 
-    return bars;
+    return set_bar_cols_heights(&bars);
 }
 
 void BarSpectrumDataTransformer::calculate_cutoff_frequencies() {
@@ -153,6 +153,17 @@ void BarSpectrumDataTransformer::apply_fading_smoothing(std::vector<uint32_t>* b
     if (m_counter-- == 0) {
         m_counter = m_settings->decreate_bars_counter;
     }
+}
+
+std::vector<double> BarSpectrumDataTransformer::set_bar_cols_heights(std::vector<uint32_t>* bars) {
+    std::vector<double> result;
+
+    for (auto &bar : *bars) {
+        auto bar_height = (static_cast<double>(bar) / static_cast<double>(m_settings->max_magnitude) * static_cast<double>(m_settings->col_height));
+        result.push_back(bar_height);
+    }
+
+    return result;
 }
 
 BarSpectrumDataTransformer::~BarSpectrumDataTransformer() {
