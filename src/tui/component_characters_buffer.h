@@ -45,7 +45,7 @@ enum AnsiColor {
 };
 
 struct Character {
-    char character;
+    char16_t character;
     AnsiColor color;
 };
 

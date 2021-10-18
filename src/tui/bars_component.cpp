@@ -29,7 +29,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     Character characters[m_col_height][total_width];
     for (int i = 0; i < m_col_height; i++) {
         for (int j = 0; j < total_width; j++) {
-            characters[i][j] = { ' ', AnsiColor::None };
+            characters[i][j] = { u' ', AnsiColor::None };
         }
     }
 
@@ -45,7 +45,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
-                characters[j][i + k] = { '*', AnsiColor::FGRed };
+                characters[j][i + k] = { u'█', AnsiColor::FGRed };
             }
         }
 
