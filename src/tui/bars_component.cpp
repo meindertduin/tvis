@@ -35,17 +35,20 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
     int i = 0;
     for (auto &bar : bars) {
-        if (bar > m_settings->max_magnitude) {
-            bar = m_settings->max_magnitude;
+        auto bar_height = (static_cast<double>(bar) / static_cast<double>(m_settings->max_magnitude) * static_cast<double>(m_col_height));
+        auto first_decimal = static_cast<int>(bar_height * 10.0) % 10;
+
+        int extra_height = 0;
+        if (first_decimal > 2) {
+            extra_height = 1;
         }
 
-        auto bar_height = std::round((static_cast<double>(bar) / static_cast<double>(m_settings->max_magnitude))
-                * static_cast<double>(m_col_height));
-        int inverted_height = m_col_height - bar_height;
+        int inverted_height = m_col_height - std::floor(bar_height) - extra_height;
 
+        // add characters from the bottom to the top of the bar
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
-                characters[j][i + k] = { "▋", AnsiColor::FGBrightYellow };
+                characters[j][i + k] = { "X", AnsiColor::FGBrightYellow };
             }
         }
 

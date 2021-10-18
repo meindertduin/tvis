@@ -42,6 +42,10 @@ std::vector<uint32_t> BarSpectrumDataTransformer::transform(buffer_frame* buffer
         mag *= (std::log2(2 + k * 1.5) * (100.0 / m_bars_amount));
         mag = std::pow(mag, 0.5);
 
+        if (mag > m_settings->max_magnitude) {
+            mag = m_settings->max_magnitude;
+        }
+
         bars.push_back(static_cast<uint32_t>(mag));
     }
 
