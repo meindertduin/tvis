@@ -51,15 +51,14 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
             for (auto k = 0u; k < m_bars_width; k++) {
                 char bar_char;
                 if (j == inverted_height + 1) {
-                    if (first_decimal < 4) {
-                        bar_char = get_bar_char(BarCharacterPiece::QuarterBlock);
-                    } else if (first_decimal < 7) {
-                        bar_char = get_bar_char(BarCharacterPiece::HalfBlock);
+                    int actual_bar_height = m_col_height - inverted_height;
+                    if (i > 0 && i < bars.size()) {
+                        bar_char = get_bar_top_char(&bars, i, j, first_decimal);
                     } else {
-                        bar_char = get_bar_char(BarCharacterPiece::FullBlock);
+                        bar_char = get_straight_top_block(first_decimal);
                     }
                 } else {
-                    bar_char = get_bar_char(BarCharacterPiece::FullBlock);
+                    bar_char = get_bar_char_character_piece(BarCharacterPiece::FullBlock);
                 }
 
                 characters[j][i + k] = { bar_char, AnsiColor::FGBrightYellow };
@@ -76,6 +75,36 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     return m_component_character_buffer.get();
 }
 
+char BarsComponent::get_bar_top_char(vector<double> *bars, int current_bar_index, int bar_heigth, int first_decimal) {
+    auto left_bar_height = static_cast<uint32_t>((*bars)[current_bar_index - 1]);
+    auto right_bar_height = static_cast<uint32_t>((*bars)[current_bar_index + 1]);
+
+    if (left_bar_height > bar_heigth) {
+        if (right_bar_height < bar_heigth) {
+            // right corner
+            return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
+        }
+    }
+
+    if (right_bar_height < bar_heigth) {
+        if (left_bar_height < bar_heigth) {
+            // left corner
+            return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
+        }
+    }
+
+    return get_straight_top_block(first_decimal);
+}
+
+char BarsComponent::get_straight_top_block(int first_decimal) {
+    if (first_decimal < 4) {
+        return get_bar_char_character_piece(BarCharacterPiece::QuarterBlock);
+    } else if (first_decimal < 7) {
+        return get_bar_char_character_piece(BarCharacterPiece::HalfBlock);
+    }
+
+    return get_bar_char_character_piece(BarCharacterPiece::FullBlock);
+}
 
 void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
     auto bars_amount = std::floor(component_data->width / Constants::k_bars_width);
@@ -96,7 +125,7 @@ void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
     });
 }
 
-char BarsComponent::get_bar_char(BarCharacterPiece character_piece) {
+char BarsComponent::get_bar_char_character_piece(BarCharacterPiece character_piece) {
     switch(character_piece) {
         case BarCharacterPiece::FullBlock:
             {
@@ -116,6 +145,20 @@ char BarsComponent::get_bar_char(BarCharacterPiece character_piece) {
                 auto index = std::rand() % (4 - 1);
                 return quarterBlockValues[index];
             }
+        case BarCharacterPiece::CornerLeft:
+            {
+                char cornerLeftValues[3] = "/d";
+                auto index = std::rand() % (3 - 1);
+                return cornerLeftValues[index];
+            }
+        case BarCharacterPiece::CornerRight:
+            {
+                char cornerRightValues[3] = "\\b";
+                auto index = std::rand() % (3 - 1);
+                return cornerRightValues[index];
+            }
     }
+
+    // TODO: this value should not be able to be reached in the future
     return 'x';
 }
