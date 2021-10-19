@@ -9,7 +9,7 @@
 class BarSpectrumDataTransformer {
 public:
     BarSpectrumDataTransformer(std::shared_ptr<SpectrumSettings> settings);
-    std::vector<uint32_t> transform(buffer_frame* buffer, size_t buffers_size);
+    std::vector<double> transform(buffer_frame* buffer, size_t buffers_size);
 
     ~BarSpectrumDataTransformer();
 private:
@@ -25,6 +25,7 @@ private:
 
     void apply_smoothing(std::vector<uint32_t>* bars);
     void apply_fading_smoothing(std::vector<uint32_t>* bars);
+    std::vector<double> set_bar_cols_heights(std::vector<uint32_t>* bars);
 
     void calculate_cutoff_frequencies();
 };

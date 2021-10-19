@@ -3,6 +3,7 @@
 
 struct SpectrumSettings {
     uint32_t bars_amount;
+    uint32_t col_height;
     uint32_t sampling_frequency;
     double low_cutoff_frequency, high_cutoff_frequency;
     uint32_t sample_size;

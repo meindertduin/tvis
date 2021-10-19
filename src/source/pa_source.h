@@ -4,12 +4,9 @@
 
 #pragma once
 
-struct buffer_frame {
-    int16_t l;
-    int16_t r;
-};
+#include "source.h"
 
-class PaSource {
+class PaSource : Source {
 public:
     PaSource();
 

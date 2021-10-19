@@ -11,7 +11,7 @@ public:
     void clear_screen();
     ~TerminalWriter();
 private:
-    static void disable_raw_mode();
+    static void disable_raw_mode(int param);
     static void enter_raw_mode();
 };
 
