@@ -28,6 +28,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
     char output_buffer[m_col_height][total_width];
     Character characters[m_col_height][total_width];
+
     for (int i = 0; i < m_col_height; i++) {
         for (int j = 0; j < total_width; j++) {
             characters[i][j] = { ' ', AnsiColor::None };
@@ -48,8 +49,20 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         // add characters from the bottom to the top of the bar
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
-                auto full_char = get_bar_char(BarCharacterPiece::FullBlock);
-                characters[j][i + k] = { full_char, AnsiColor::FGBrightYellow };
+                char bar_char;
+                if (j == inverted_height + 1) {
+                    if (first_decimal < 4) {
+                        bar_char = get_bar_char(BarCharacterPiece::QuarterBlock);
+                    } else if (first_decimal < 7) {
+                        bar_char = get_bar_char(BarCharacterPiece::HalfBlock);
+                    } else {
+                        bar_char = get_bar_char(BarCharacterPiece::FullBlock);
+                    }
+                } else {
+                    bar_char = get_bar_char(BarCharacterPiece::FullBlock);
+                }
+
+                characters[j][i + k] = { bar_char, AnsiColor::FGBrightYellow };
             }
         }
 
@@ -86,9 +99,23 @@ void BarsComponent::set_spectrum_settings(const ComponentData *component_data) {
 char BarsComponent::get_bar_char(BarCharacterPiece character_piece) {
     switch(character_piece) {
         case BarCharacterPiece::FullBlock:
-            char fullBlockValues[28] = "QWERUOPKHGDSAXZCBNM09876532";
-            auto index = std::rand() % (28 - 1);
-            return fullBlockValues[index];
+            {
+                char fullBlockValues[28] = "QWERUOPKHGDSAXZCBNM09876532";
+                auto index = std::rand() % (28 - 1);
+                return fullBlockValues[index];
+            }
+        case BarCharacterPiece::HalfBlock:
+            {
+                char halfBlockValues[22] = "=-><zxcvbnmgasewqryuo";
+                auto index = std::rand() % (22 - 1);
+                return halfBlockValues[index];
+            }
+        case BarCharacterPiece::QuarterBlock:
+            {
+                char quarterBlockValues[4] = ".,_";
+                auto index = std::rand() % (4 - 1);
+                return quarterBlockValues[index];
+            }
     }
     return 'x';
 }
