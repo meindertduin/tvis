@@ -94,12 +94,18 @@ char BarsComponent::get_bar_top_char(vector<double> *bars, const CurrentBarData 
 
     if (left_bar_height > current_bar_data->bar_height && right_bar_height < current_bar_data->bar_height) {
         // right corner
-        return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
+        if (current_bar_data->width_index == m_bars_width - 1) {
+            return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
+        } else {
+            return get_bar_char_character_piece(BarCharacterPiece::FullBlock);
+        }
     }
 
     if (right_bar_height > current_bar_data->bar_height && left_bar_height < current_bar_data->bar_height) {
-        // left corner
-        return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
+        if (current_bar_data->width_index == 0) {
+            // left corner
+            return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
+        }
     }
 
     return get_straight_top_block(current_bar_data->first_decimal);
