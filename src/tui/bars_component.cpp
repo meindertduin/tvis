@@ -38,7 +38,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     uint32_t i = 0;
     for (auto &bar : bars) {
         CurrentBarData current_bar_data = {
-            .bar_index = i,
+            .bar_index = i / m_bars_width,
             .first_decimal = static_cast<uint32_t>(bar * 10.0) % 10,
             .extra_height = 0,
             .bar_height = 0,
@@ -46,7 +46,6 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         };
 
         current_bar_data.first_decimal = static_cast<uint32_t>(bar * 10.0) % 10;
-        current_bar_data.bar_index = i;
 
         if (current_bar_data.first_decimal > 2) {
             current_bar_data.extra_height = 1;
@@ -64,6 +63,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
                 char bar_char;
 
+                // if j == index of top bar_top
                 if (j == inverted_height + 1) {
                     if (i > 0 && i < bars.size()) {
                         bar_char = get_bar_top_char(&bars, &current_bar_data);
@@ -90,14 +90,14 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
 
 char BarsComponent::get_bar_top_char(vector<double> *bars, const CurrentBarData *current_bar_data) {
     auto left_bar_height = static_cast<uint32_t>((*bars)[current_bar_data->bar_index - 1]);
-    auto right_bar_height = static_cast<uint32_t>((*bars)[current_bar_data->bar_index + 1]);
+    auto right_bar_height = static_cast<uint32_t>(std::floor((*bars)[current_bar_data->bar_index + 1]));
 
     if (left_bar_height > current_bar_data->bar_height && right_bar_height < current_bar_data->bar_height) {
         // right corner
         return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
     }
 
-    if (right_bar_height < current_bar_data->bar_height && left_bar_height < current_bar_data->bar_height) {
+    if (right_bar_height > current_bar_data->bar_height && left_bar_height < current_bar_data->bar_height) {
         // left corner
         return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
     }
