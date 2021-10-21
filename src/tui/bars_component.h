@@ -17,8 +17,8 @@ enum BarCharacterPiece {
     FullBlock,
     HalfBlock,
     QuarterBlock,
-    SteepLeft,
-    SteepRight,
+    CornerLeft,
+    CornerRight,
 };
 
 class BarsComponent : public Component {
@@ -27,13 +27,25 @@ public:
     ComponentCharactersBuffer* create_component_text_buffer();
     ~BarsComponent();
 private:
+    struct CurrentBarData {
+        uint32_t bar_index;
+        uint32_t first_decimal;
+        uint32_t extra_height;
+        uint32_t bar_height;
+        uint32_t width_index;
+        uint32_t height_index;
+        uint32_t inverted_height;
+    };
     PaSource m_source;
 
     unsigned int m_col_height;
     unsigned int m_bars_width;
 
+    char get_bar_char(const CurrentBarData *current_bar_data, vector<double> *bars);
+    char get_bar_top_char(vector<double> *bars, const CurrentBarData *current_bar_data);
     void set_spectrum_settings(const ComponentData* component_data);
-    char get_bar_char(BarCharacterPiece character_piece);
+    char get_bar_char_character_piece(BarCharacterPiece character_piece);
+    char get_straight_top_block(int first_decimal);
 
     std::shared_ptr<SpectrumSettings> m_settings;
     std::unique_ptr<BarSpectrumDataTransformer> m_transformer;
