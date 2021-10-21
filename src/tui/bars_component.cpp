@@ -42,6 +42,7 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
             .first_decimal = static_cast<uint32_t>(bar * 10.0) % 10,
             .extra_height = 0,
             .bar_height = 0,
+            .width_index = 0,
         };
 
         current_bar_data.first_decimal = static_cast<uint32_t>(bar * 10.0) % 10;
@@ -54,15 +55,16 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         }
 
         int inverted_height = m_col_height - std::floor(bar) - current_bar_data.extra_height;
+        current_bar_data.bar_height = static_cast<uint32_t>(std::floor(bar));
 
         // add characters from the bottom to the top of the bar
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
-                current_bar_data.bar_height = j;
+                current_bar_data.width_index = k;
 
                 char bar_char;
+
                 if (j == inverted_height + 1) {
-                    int actual_bar_height = m_col_height - inverted_height;
                     if (i > 0 && i < bars.size()) {
                         bar_char = get_bar_top_char(&bars, &current_bar_data);
                     } else {
@@ -90,14 +92,12 @@ char BarsComponent::get_bar_top_char(vector<double> *bars, const CurrentBarData 
     auto left_bar_height = static_cast<uint32_t>((*bars)[current_bar_data->bar_index - 1]);
     auto right_bar_height = static_cast<uint32_t>((*bars)[current_bar_data->bar_index + 1]);
 
-    if (left_bar_height > current_bar_data->bar_height - current_bar_data->extra_height
-            && right_bar_height < current_bar_data->bar_height - current_bar_data->extra_height) {
+    if (left_bar_height > current_bar_data->bar_height && right_bar_height < current_bar_data->bar_height) {
         // right corner
         return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
     }
 
-    if (right_bar_height < current_bar_data->bar_height - current_bar_data->extra_height
-            && left_bar_height < current_bar_data->bar_height - current_bar_data->extra_height) {
+    if (right_bar_height < current_bar_data->bar_height && left_bar_height < current_bar_data->bar_height) {
         // left corner
         return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
     }

@@ -32,6 +32,7 @@ private:
         uint32_t first_decimal;
         uint32_t extra_height;
         uint32_t bar_height;
+        uint32_t width_index;
     };
     PaSource m_source;
 
