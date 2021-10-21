@@ -35,27 +35,38 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         }
     }
 
-    int i = 0;
+    uint32_t i = 0;
     for (auto &bar : bars) {
-        auto first_decimal = static_cast<int>(bar * 10.0) % 10;
+        CurrentBarData current_bar_data = {
+            .bar_index = i,
+            .first_decimal = static_cast<uint32_t>(bar * 10.0) % 10,
+            .extra_height = 0,
+            .bar_height = 0,
+        };
 
-        int extra_height = 0;
-        if (first_decimal > 2) {
-            extra_height = 1;
+        current_bar_data.first_decimal = static_cast<uint32_t>(bar * 10.0) % 10;
+        current_bar_data.bar_index = i;
+
+        if (current_bar_data.first_decimal > 2) {
+            current_bar_data.extra_height = 1;
+        } else {
+            current_bar_data.extra_height = 0;
         }
 
-        int inverted_height = m_col_height - std::floor(bar) - extra_height;
+        int inverted_height = m_col_height - std::floor(bar) - current_bar_data.extra_height;
 
         // add characters from the bottom to the top of the bar
         for (auto j = m_col_height; j > inverted_height; j--) {
             for (auto k = 0u; k < m_bars_width; k++) {
+                current_bar_data.bar_height = j;
+
                 char bar_char;
                 if (j == inverted_height + 1) {
                     int actual_bar_height = m_col_height - inverted_height;
                     if (i > 0 && i < bars.size()) {
-                        bar_char = get_bar_top_char(&bars, i, j, first_decimal);
+                        bar_char = get_bar_top_char(&bars, &current_bar_data);
                     } else {
-                        bar_char = get_straight_top_block(first_decimal);
+                        bar_char = get_straight_top_block(current_bar_data.first_decimal);
                     }
                 } else {
                     bar_char = get_bar_char_character_piece(BarCharacterPiece::FullBlock);
@@ -75,25 +86,23 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     return m_component_character_buffer.get();
 }
 
-char BarsComponent::get_bar_top_char(vector<double> *bars, int current_bar_index, int bar_heigth, int first_decimal) {
-    auto left_bar_height = static_cast<uint32_t>((*bars)[current_bar_index - 1]);
-    auto right_bar_height = static_cast<uint32_t>((*bars)[current_bar_index + 1]);
+char BarsComponent::get_bar_top_char(vector<double> *bars, const CurrentBarData *current_bar_data) {
+    auto left_bar_height = static_cast<uint32_t>((*bars)[current_bar_data->bar_index - 1]);
+    auto right_bar_height = static_cast<uint32_t>((*bars)[current_bar_data->bar_index + 1]);
 
-    if (left_bar_height > bar_heigth) {
-        if (right_bar_height < bar_heigth) {
-            // right corner
-            return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
-        }
+    if (left_bar_height > current_bar_data->bar_height - current_bar_data->extra_height
+            && right_bar_height < current_bar_data->bar_height - current_bar_data->extra_height) {
+        // right corner
+        return get_bar_char_character_piece(BarCharacterPiece::CornerRight);
     }
 
-    if (right_bar_height < bar_heigth) {
-        if (left_bar_height < bar_heigth) {
-            // left corner
-            return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
-        }
+    if (right_bar_height < current_bar_data->bar_height - current_bar_data->extra_height
+            && left_bar_height < current_bar_data->bar_height - current_bar_data->extra_height) {
+        // left corner
+        return get_bar_char_character_piece(BarCharacterPiece::CornerLeft);
     }
 
-    return get_straight_top_block(first_decimal);
+    return get_straight_top_block(current_bar_data->first_decimal);
 }
 
 char BarsComponent::get_straight_top_block(int first_decimal) {
