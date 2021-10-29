@@ -40,12 +40,17 @@ private:
 
     unsigned int m_col_height;
     unsigned int m_bars_width;
+    unsigned int m_inactive_count = 0;
 
+    const unsigned int km_max_inactive_count = 5;
+
+    vector<double> get_bars();
     char get_bar_char(const CurrentBarData *current_bar_data, vector<double> *bars);
     char get_bar_top_char(vector<double> *bars, const CurrentBarData *current_bar_data);
     void set_spectrum_settings(const ComponentData* component_data);
     char get_bar_char_character_piece(BarCharacterPiece character_piece);
     char get_straight_top_block(int first_decimal);
+    void set_is_active(bool value);
 
     std::shared_ptr<SpectrumSettings> m_settings;
     std::unique_ptr<BarSpectrumDataTransformer> m_transformer;

@@ -29,6 +29,9 @@ public:
 
         m_component_data = component_data;
     }
+    bool is_active() {
+        return m_active;
+    }
 
     virtual ComponentCharactersBuffer* create_component_text_buffer() = 0;
 
@@ -38,4 +41,10 @@ protected:
     ComponentData m_component_data;
     std::unique_ptr<ComponentCharactersBuffer> m_component_character_buffer;
     std::function<void(const ComponentData*)> m_on_resize = nullptr;
+
+    void set_active(bool value) {
+        m_active = value;
+    }
+private:
+    bool m_active = true;
 };
