@@ -49,3 +49,7 @@ bool Screen::set_window_size() {
 void Screen::handle_terminal_resize() {
     m_bars_component->set_component_data({m_screen_data.width, 20, 0, 0});
 }
+
+bool Screen::is_active() {
+    return m_bars_component->is_active();
+}

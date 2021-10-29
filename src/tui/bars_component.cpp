@@ -35,8 +35,13 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         }
     }
 
+    bool is_active = false;
     uint32_t i = 0;
     for (auto &bar : bars) {
+        if (bar > 1) {
+            is_active = true;
+        }
+
         CurrentBarData current_bar_data = {
             .bar_index = i / m_bars_width,
             .first_decimal = static_cast<uint32_t>(bar * 10.0) % 10,
@@ -75,9 +80,24 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
         m_component_character_buffer->set_row(i, characters[i], total_width);
     }
 
+    set_is_active(is_active);
+
     return m_component_character_buffer.get();
 }
 
+void BarsComponent::set_is_active(bool is_active) {
+    if (is_active) {
+        m_inactive_count = 0;
+        set_active(true);
+        return;
+    }
+
+    if (km_max_inactive_count > m_inactive_count) {
+        m_inactive_count++;
+    } else {
+        set_active(false);
+    }
+}
 
 char BarsComponent::get_bar_char(const CurrentBarData *current_bar_data, vector<double> *bars) {
     char bar_char;

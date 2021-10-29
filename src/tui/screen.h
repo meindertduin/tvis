@@ -12,6 +12,7 @@ struct ScreenData {
 class Screen {
 public:
     Screen();
+    bool is_active();
     ~Screen();
     void render();
 private:
