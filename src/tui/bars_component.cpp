@@ -20,11 +20,7 @@ BarsComponent::~BarsComponent() {
 
 ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     auto total_width = Constants::k_bars_width * m_settings->bars_amount;
-
-    buffer_frame buffer[Constants::k_sample_size];
-    m_source.read(buffer, sizeof(buffer));
-
-    auto bars = m_transformer.get()->transform(buffer, sizeof(buffer));
+    auto bars = get_bars();
 
     char output_buffer[m_col_height][total_width];
     Character characters[m_col_height][total_width];
@@ -83,6 +79,13 @@ ComponentCharactersBuffer* BarsComponent::create_component_text_buffer() {
     set_is_active(is_active);
 
     return m_component_character_buffer.get();
+}
+
+vector<double> BarsComponent::get_bars() {
+    buffer_frame buffer[Constants::k_sample_size];
+    m_source.read(buffer, sizeof(buffer));
+
+    return m_transformer.get()->transform(buffer, sizeof(buffer));
 }
 
 void BarsComponent::set_is_active(bool is_active) {

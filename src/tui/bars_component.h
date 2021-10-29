@@ -44,6 +44,7 @@ private:
 
     const unsigned int km_max_inactive_count = 5;
 
+    vector<double> get_bars();
     char get_bar_char(const CurrentBarData *current_bar_data, vector<double> *bars);
     char get_bar_top_char(vector<double> *bars, const CurrentBarData *current_bar_data);
     void set_spectrum_settings(const ComponentData* component_data);
